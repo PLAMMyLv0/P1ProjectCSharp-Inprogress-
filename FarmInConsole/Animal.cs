@@ -1,42 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FarmInConsole
 {
-    public class Animal : ISellable
+    class Animal
     {
-        public string Name { get; set; }
-        public string Produce { get; set; }
-        public int DaysToProduce { get; set; }
-        public double SellPrice { get; set; }
+        protected string name;
 
-        public Animal(string name, string produce, int daysToProduce, double sellPrice)
+        public Animal(string name)
         {
-            Name = name;
-            Produce = produce;
-            DaysToProduce = daysToProduce;
-            SellPrice = sellPrice;
+            this.name = name;
         }
 
-        public void ProduceGoods()
+        public virtual void Speak()
         {
-            if (DaysToProduce > 0)
-            {
-                DaysToProduce--;
-            }
+            Console.WriteLine($"{name} กำลังทำเสียง");
         }
+    }
 
-        public bool CanHarvest()
+    class Cow : Animal
+    {
+        public Cow(string name) : base(name) { }
+
+        public override void Speak()
         {
-            return DaysToProduce == 0;
+            Console.WriteLine($"{name} พูดว่า มอ!");
         }
+    }
 
-        public void Sell()
+    class Chicken : Animal
+    {
+        public Chicken(string name) : base(name) { }
+
+        public override void Speak()
         {
-            Console.WriteLine($"{Name} has been sold for {SellPrice}.");
+            Console.WriteLine($"{name} พูดว่า กุ๊ก!");
         }
     }
 }

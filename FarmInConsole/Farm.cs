@@ -1,52 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FarmInConsole
 {
-    public class Farm
+    class Farm : IManageable
     {
-        public Player Player { get; set; }
-        public Crop[,] FarmLand { get; set; }
+        private string name;
+        private int[,] field;  // พื้นที่เพาะปลูกขนาด 2 มิติ
+        private List<Animal> animals;  // รายชื่อสัตว์เลี้ยงในฟาร์ม
 
-        public Farm(Player player)
+        public Farm(string name, int rows, int cols)
         {
-            Player = player;
-            FarmLand = new Crop[5, 5]; // แปลงฟาร์มขนาด 5x5
+            this.name = name;
+            this.field = new int[rows, cols];
+            this.animals = new List<Animal>();
         }
 
-        public void PlantCrop(Crop crop, int x, int y)
+        public void AddAnimal(Animal animal)
         {
-            if (FarmLand[x, y] == null)
+            animals.Add(animal);
+        }
+
+        public void PlantCrop(int row, int col, int cropType)
+        {
+            if (row >= 0 && row < field.GetLength(0) && col >= 0 && col < field.GetLength(1))
             {
-                FarmLand[x, y] = crop;
-                Player.Crops.Add(crop);
-                Console.WriteLine($"Planted {crop.Name} at location [{x},{y}].");
+                field[row, col] = cropType;
+                Console.WriteLine($"เพาะปลูกสำเร็จในตำแหน่ง: {row}, {col}");
             }
             else
             {
-                Console.WriteLine("This plot is already occupied.");
+                Console.WriteLine("ตำแหน่งไม่ถูกต้อง");
             }
         }
 
-        public void ShowFarmLand()
+        public void ShowField()
         {
-            for (int i = 0; i < FarmLand.GetLength(0); i++)
+            for (int i = 0; i < field.GetLength(0); i++)
             {
-                for (int j = 0; j < FarmLand.GetLength(1); j++)
+                for (int j = 0; j < field.GetLength(1); j++)
                 {
-                    if (FarmLand[i, j] != null)
-                    {
-                        Console.Write($"[{FarmLand[i, j].Name}] ");
-                    }
-                    else
-                    {
-                        Console.Write("[Empty] ");
-                    }
+                    Console.Write(field[i, j] + " ");
                 }
                 Console.WriteLine();
+            }
+        }
+
+        public void Manage()
+        {
+            Console.WriteLine($"จัดการฟาร์ม {name}");
+            ShowField();
+            foreach (var animal in animals)
+            {
+                animal.Speak();
             }
         }
     }
